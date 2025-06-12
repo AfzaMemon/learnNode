@@ -3,7 +3,7 @@ const fs=require("fs");
 const url=require("url");
 
 const myServer=http.createServer((req,res) =>{
-    const log=`Date :${Date.now()} :${req.url} New requet recived\n` ;
+    const log=`Date :${Date.now()} :${req.url}  ${req.method} New requet recived\n` ;
     const myUrl=url.parse(req.url,true);
     console.log(myUrl);
      if(req.url ==="/favicon.ico") return res.end();
@@ -14,13 +14,33 @@ const myServer=http.createServer((req,res) =>{
     switch(myUrl.pathname){
        
         case "/":
-            res.end("Hello from the server! Home Page");
+            if(req.method ==="GET"){
+                 res.end("Hello from the server! Home Page");
+
+            }
+           
             break;
             case "/about":
                 const username=myUrl.query.myname
                 res.end(`Hey ${username}`);
                 break;
-                default:
+                case "/search":
+                    const search =myUrl.query.search_query;
+                    res.end(`You searched for ${search}`);
+                    break;
+
+                    case "/signup":
+                    if(req.method ==="GET"){
+                        res.end("This is the signup page"); 
+                        break;
+                    }
+                    else if(req.method ==="POST"){
+                        //db query to save the data
+                        req.end("Success");
+
+                    }
+
+                     default:
                     res.end("404 Not Found");
                     break;
 
